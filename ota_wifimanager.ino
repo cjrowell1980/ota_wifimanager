@@ -17,7 +17,7 @@
 #include <TFT_eSPI.h>             // TFT_eSPI library (Bodmer)
 #include <XPT2046_Touchscreen.h> // XPT2046 touchscreen library (PaulStoffregen)
 #include <SD.h>
-#include <JPEGDecoder.h> // For JPG image decoding
+#include <TJpg_Decoder.h> // For JPG image decoding (Bodmer)
 
 // Pin configuration for XPT2046 (update as needed for your hardware)
 #define CS_PIN  8   // Chip select pin for touchscreen
@@ -50,6 +50,12 @@ void loop() {
   // Add other logic as needed
 }
 
+// TJpg_Decoder callback to push pixels to TFT
+static bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
+  tft.pushImage(x, y, w, h, bitmap);
+  return true;
+}
+
 void displayRandomImageFromSD() {
   // List JPG image files on SD, pick one at random, and display on TFT
   File root = SD.open("/");
@@ -68,25 +74,9 @@ void displayRandomImageFromSD() {
   int idx = random(images.size());
   String imgName = images[idx];
   tft.fillScreen(TFT_BLACK);
-  // Use JPEGDecoder to draw the image
-  if (JpegDec.decodeSdFile(imgName.c_str())) {
-    uint16_t *pImg;
-    int mcu_w = JpegDec.MCUWidth;
-    int mcu_h = JpegDec.MCUHeight;
-    int max_x = JpegDec.width;
-    int max_y = JpegDec.height;
-    int x = 0, y = 0;
-    while (y < max_y) {
-      while (x < max_x) {
-        if (!JpegDec.read()) break;
-        pImg = JpegDec.pImage;
-        tft.pushImage(x, y, JpegDec.MCUWidth, JpegDec.MCUHeight, pImg);
-        x += mcu_w;
-      }
-      x = 0;
-      y += mcu_h;
-    }
-  } else {
+  TJpg_Decoder.setJpgScale(1); // No scaling
+  TJpg_Decoder.setCallback(tft_output);
+  if (!TJpg_Decoder.drawSdJpg(0, 0, imgName.c_str())) {
     tft.setTextColor(TFT_WHITE, TFT_BLACK);
     tft.setTextSize(2);
     tft.setCursor(10, 10);
