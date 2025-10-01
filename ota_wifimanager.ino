@@ -3,7 +3,7 @@
  * Main Arduino sketch for ESP32 OTA WiFi Manager with SD card and TFT touchscreen support.
  * Uses pre-built libraries for WiFi, OTA, TFT, and touchscreen.
  */
-#include <WiFiManager.h>          // Pre-built WiFi manager
+#include <WiFiManager.h>          // WiFiManager library (tzapu)
 #include <ArduinoOTA.h>           // Pre-built OTA
 #include <TFT_eSPI.h>             // Example TFT library
 #include <XPT2046_Touchscreen.h> // XPT2046 touchscreen library (PaulStoffregen)
@@ -17,7 +17,7 @@ XPT2046_Touchscreen ts = XPT2046_Touchscreen();
 void setup() {
   Serial.begin(115200);
   WiFiManager wifiManager;
-  wifiManager.autoConnect("OTA_WiFiManager");
+  wifiManager.autoConnect("OTA_WiFiManager"); // Uses tzapu/WiFiManager
   ArduinoOTA.begin();
   SD.begin();
   // ts.begin(); // Uncomment and configure as needed for XPT2046
