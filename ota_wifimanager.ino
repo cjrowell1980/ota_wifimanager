@@ -4,7 +4,7 @@
  * Uses pre-built libraries for WiFi, OTA, TFT, and touchscreen.
  */
 #include <WiFiManager.h>          // WiFiManager library (tzapu)
-#include <ArduinoOTA.h>           // Pre-built OTA
+#include <ArduinoOTA.h>           // ArduinoOTA library (jandrassy)
 #include <TFT_eSPI.h>             // Example TFT library
 #include <XPT2046_Touchscreen.h> // XPT2046 touchscreen library (PaulStoffregen)
 #include <SD.h>
@@ -18,7 +18,7 @@ void setup() {
   Serial.begin(115200);
   WiFiManager wifiManager;
   wifiManager.autoConnect("OTA_WiFiManager"); // Uses tzapu/WiFiManager
-  ArduinoOTA.begin();
+  ArduinoOTA.begin(); // Uses jandrassy/ArduinoOTA
   SD.begin();
   // ts.begin(); // Uncomment and configure as needed for XPT2046
   // ts.begin(); // Uncomment and configure as needed
@@ -29,7 +29,7 @@ void setup() {
 
 
 void loop() {
-  ArduinoOTA.handle();
+  ArduinoOTA.handle(); // Uses jandrassy/ArduinoOTA
   handleTouchEvent();
   menu_manager_loop();
   // Add other logic as needed
