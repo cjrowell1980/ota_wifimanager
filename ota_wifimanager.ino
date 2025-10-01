@@ -5,11 +5,11 @@
  */
 #include <WiFiManager.h>          // WiFiManager library (tzapu)
 #include <ArduinoOTA.h>           // ArduinoOTA library (jandrassy)
-#include <TFT_eSPI.h>             // Example TFT library
+#include <TFT_eSPI.h>             // TFT_eSPI library (Bodmer)
 #include <XPT2046_Touchscreen.h> // XPT2046 touchscreen library (PaulStoffregen)
 #include <SD.h>
 
-TFT_eSPI tft = TFT_eSPI();
+TFT_eSPI tft = TFT_eSPI(); // Uses Bodmer/TFT_eSPI
 XPT2046_Touchscreen ts = XPT2046_Touchscreen();
 
 #include "menu_manager.h"
