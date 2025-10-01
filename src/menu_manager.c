@@ -29,9 +29,26 @@ void menu_manager_init(void) {
     // Initialize menu structure, load settings, etc.
 }
 
+// Simple touch region detection for Back/Next navigation
+static void menu_manager_handle_touch(int x, int y) {
+    // Back button: left half (0-160, 200-240)
+    if (y >= 200 && y <= 240) {
+        if (x >= 0 && x < 160) {
+            // Back
+            currentStatusPage = (StatusPage)((currentStatusPage - 1 + STATUS_PAGE_COUNT) % STATUS_PAGE_COUNT);
+            menu_manager_show_status_page();
+        } else if (x >= 160 && x < 320) {
+            // Next
+            currentStatusPage = (StatusPage)((currentStatusPage + 1) % STATUS_PAGE_COUNT);
+            menu_manager_show_status_page();
+        }
+    }
+}
+
 void menu_manager_loop(void) {
-    // Handle menu navigation, draw menus, process touch events
-    // Example: main menu, image selection, WiFi settings, update/reset
+    // Always show the current status page
+    menu_manager_show_status_page();
+    // Touch handling should call menu_manager_handle_touch(x, y) from main sketch
 }
 
 void menu_manager_system_reset(void) {
