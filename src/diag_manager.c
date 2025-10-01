@@ -1,6 +1,6 @@
 // diag_manager.c
 // Diagnostics page and functions for OTA WiFi Manager
-#include "diag_manager.h"
+#include "include/diag_manager.h"
 #include <TFT_eSPI.h>
 #include <Arduino.h>
 
