@@ -30,7 +30,7 @@ void menu_manager_init(void) {
 }
 
 // Simple touch region detection for Back/Next navigation
-static void menu_manager_handle_touch(int x, int y) {
+void menu_manager_handle_touch(int x, int y) {
     // Back button: left half (0-160, 200-240)
     if (y >= 200 && y <= 240) {
         if (x >= 0 && x < 160) {

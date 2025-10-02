@@ -94,20 +94,8 @@ void handleTouchEvent() {
     int x = p.x;
     int y = p.y;
     // TODO: Calibrate and map x/y if needed
-  // Pass touch event to menu_manager for navigation/settings
-  menu_manager_handle_touch(x, y);
-// Stub for menu_manager_handle_touch (implement in menu_manager.c for real logic)
-void menu_manager_handle_touch(int x, int y) {
-  // Example: print coordinates, real logic should handle menu navigation
-  Serial.print("Touch at: ");
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.println(y);
-}
+    
+    // Pass touch event to menu manager for navigation
+    menu_manager_handle_touch(x, y);
   }
-}
-  // Handle touchscreen events using XPT2046_Touchscreen
-  // Example: if (ts.touched()) { ... }
-  // Handle touchscreen events
-  // Placeholder: implement using your touchscreen library
 }
