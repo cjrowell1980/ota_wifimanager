@@ -1,7 +1,7 @@
 /* config.c
  * Handles persistent storage and retrieval of settings for OTA WiFi Manager
  */
-#include "include/config.h"
+#include "config.h"
 #include <EEPROM.h>
 #include <Arduino.h>
 

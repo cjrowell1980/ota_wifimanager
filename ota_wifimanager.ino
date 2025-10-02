@@ -25,7 +25,7 @@
 TFT_eSPI tft = TFT_eSPI(); // Uses Bodmer/TFT_eSPI
 XPT2046_Touchscreen ts(CS_PIN, TIRQ_PIN);
 
-#include "include/menu_manager.h"
+#include "menu_manager.h"
 
 void setup() {
   Serial.begin(115200);

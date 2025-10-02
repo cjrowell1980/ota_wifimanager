@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include <WiFiManager.h> // Use tzapu/WiFiManager directly
+#include <include/wifi_manager.h> // Use tzapu/WiFiManager directly
 // OTA handled in Arduino sketch via jandrassy/ArduinoOTA
 #include "sd_manager.h"
 #include "tft_manager.h"
