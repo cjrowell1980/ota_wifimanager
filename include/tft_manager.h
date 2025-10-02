@@ -4,11 +4,12 @@
 
 #include <TFT_eSPI.h>
 
+// TFT object needs C++ linkage since it's a C++ class
+extern TFT_eSPI tft;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-extern TFT_eSPI tft;
 
 void tft_manager_init(void);
 void tft_touchscreen_init(void);
