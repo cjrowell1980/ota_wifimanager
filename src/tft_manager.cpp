@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 extern TFT_eSPI tft;
+TJpg_Decoder tjpg;
 
 void tft_manager_init(void) {
     printf("TFT Manager Initialized\n");
@@ -54,9 +55,9 @@ void tft_display_random_image_from_sd(void) {
     if (count == 0) return;
     int idx = rand() % count;
     tft.fillScreen(TFT_BLACK);
-    TJpg_Decoder::setJpgScale(1);
-    TJpg_Decoder::setCallback(tft_output);
-    if (!TJpg_Decoder::drawSdJpg(0, 0, images[idx])) {
+    tjpg.setJpgScale(1);
+    tjpg.setCallback(tft_output);
+    if (!tjpg.drawSdJpg(0, 0, images[idx])) {
         tft.setTextColor(TFT_WHITE, TFT_BLACK);
         tft.setTextSize(2);
         tft.setCursor(10, 10);
