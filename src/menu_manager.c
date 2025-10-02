@@ -2,10 +2,10 @@
  * Handles touchscreen menu navigation and configuration for OTA WiFi Manager.
  * This is a stub for menu logic. Integrate with TFT and touchscreen libraries.
  */
-#include "include/menu_manager.h"
+#include "menu_manager.h"
 #include <stdio.h>
 #include <TFT_eSPI.h>
-#include "include/diag_manager.h"
+#include "diag_manager.h"
 
 #include "config.h"
 
