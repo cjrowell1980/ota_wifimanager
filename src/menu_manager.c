@@ -7,7 +7,7 @@
 #include <TFT_eSPI.h>
 #include "include/diag_manager.h"
 
-#include "config.h"
+#include "include/config.h"
 
 extern TFT_eSPI tft;
 
