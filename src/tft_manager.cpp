@@ -1,4 +1,4 @@
-// tft_manager.c
+// tft_manager.cpp
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +10,14 @@
 
 extern TFT_eSPI tft;
 TJpg_Decoder tjpg;
+
+// TJpg_Decoder callback to push pixels to TFT
+static bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
+    tft.pushImage(x, y, w, h, bitmap);
+    return true;
+}
+
+extern "C" {
 
 void tft_manager_init(void) {
     printf("TFT Manager Initialized\n");
@@ -66,3 +74,5 @@ void tft_display_random_image_from_sd(void) {
     }
     for (int i = 0; i < count; ++i) free(images[i]);
 }
+
+} // extern "C"
