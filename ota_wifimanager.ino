@@ -52,9 +52,9 @@ void initWiFi() {
   
   Serial.println("Attempting WiFi connection with saved credentials...");
   
-  // Wait up to 5 seconds for connection with saved credentials
+  // Wait up to 3 seconds for connection with saved credentials
   int attempts = 0;
-  while (WiFi.status() != WL_CONNECTED && attempts < 10) {
+  while (WiFi.status() != WL_CONNECTED && attempts < 6) {
     delay(500);
     Serial.print(".");
     attempts++;
@@ -70,7 +70,7 @@ void initWiFi() {
     WiFi.begin(wifi_ssid, wifi_password);
     
     attempts = 0;
-    while (WiFi.status() != WL_CONNECTED && attempts < 10) {
+    while (WiFi.status() != WL_CONNECTED && attempts < 6) {
       delay(500);
       Serial.print(".");
       attempts++;
@@ -162,33 +162,45 @@ void setup() {
   Serial.println("Initializing WiFi...");
   initWiFi();
   Serial.println("WiFi initialization complete");
+  yield();
   
   // Start displaying images regardless of WiFi status
   Serial.println("Displaying test pattern instead of images...");
   
   // Show a simple test pattern instead of trying to load images
+  Serial.println("Clearing screen...");
   tft.fillScreen(TFT_BLACK);
+  Serial.println("Screen cleared");
+  
+  Serial.println("Drawing main text...");
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.setTextSize(3);
   tft.setCursor(60, 80);
   tft.print("TFT WORKS!");
+  Serial.println("Main text displayed");
   
+  Serial.println("Drawing title...");
   tft.setTextSize(2);
   tft.setCursor(20, 120);
   tft.print("OTA WiFi Manager");
+  Serial.println("Title displayed");
   
+  Serial.println("Drawing status...");
   tft.setTextSize(1);
   tft.setCursor(10, 150);
   tft.print("SD Card: Failed");
   tft.setCursor(10, 170);
   tft.print("Touch: Disabled");
+  Serial.println("Status displayed");
   
   // Draw some colored rectangles to test display
+  Serial.println("Drawing color rectangles...");
   tft.fillRect(10, 190, 50, 20, TFT_RED);
   tft.fillRect(70, 190, 50, 20, TFT_GREEN);
   tft.fillRect(130, 190, 50, 20, TFT_BLUE);
   tft.fillRect(190, 190, 50, 20, TFT_YELLOW);
   tft.fillRect(250, 190, 50, 20, TFT_MAGENTA);
+  Serial.println("Color rectangles displayed");
   
   Serial.println("Test pattern displayed");
   
