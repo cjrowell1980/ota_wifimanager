@@ -110,12 +110,12 @@ void setup() {
   yield();
   
   // Initialize hardware step by step with debugging
-  Serial.println("Initializing SD card...");
-  if (!SD.begin()) {
-    Serial.println("SD card initialization failed!");
-    // Continue without SD card
+  Serial.println("Initializing SD card (CS=5)...");
+  if (!SD.begin(5)) {
+    Serial.println("SD card initialization failed on CS=5!");
+    Serial.println("Check wiring, card format (FAT32), and CS pin.");
   } else {
-    Serial.println("SD card initialized successfully");
+    Serial.println("SD card initialized successfully on CS=5!");
   }
   yield();
   
