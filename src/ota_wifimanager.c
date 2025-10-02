@@ -5,8 +5,8 @@
 
 #include <include/wifi_manager.h> // Use tzapu/WiFiManager directly
 // OTA handled in Arduino sketch via jandrassy/ArduinoOTA
-#include "sd_manager.h"
-#include "tft_manager.h"
+#include "include/sd_manager.h"
+#include "include/tft_manager.h"
 
 void app_main(void) {
     printf("Starting OTA WiFi Manager...\n");

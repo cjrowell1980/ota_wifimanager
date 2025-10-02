@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "sd_manager.h": "c"
+        "sd_manager.h": "c",
+        "menu_manager.h": "c",
+        "ota_manager.h": "c",
+        "config.h": "c",
+        "web_manager.h": "c",
+        "wifi_manager.h": "c"
     }
 }

@@ -1,6 +1,6 @@
 // web_manager.c
 // Simple web server for OTA WiFi Manager (ESP32)
-#include "web_manager.h"
+#include "include/web_manager.h"
 #include <WiFi.h>
 #include <WebServer.h>
 
@@ -37,8 +37,8 @@ static void handle_status() {
     server.send(200, "text/html", html);
 }
 
-#include "config.h"
-#include "wifi_manager.h"
+#include "include/config.h"
+#include "include/wifi_manager.h"
 
 // Settings page (GET/POST)
 static void handle_settings() {
