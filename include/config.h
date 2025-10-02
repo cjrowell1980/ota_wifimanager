@@ -2,6 +2,7 @@
  * Default configuration values for OTA WiFi Manager
  */
 #ifndef CONFIG_H
+#include <stdbool.h>
 #define CONFIG_H
 
 #include "defaults.h"

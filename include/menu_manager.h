@@ -1,4 +1,5 @@
 /* menu_manager.h
+#include <stdbool.h>
  * Handles touchscreen menu navigation and configuration for OTA WiFi Manager.
  */
 #ifndef MENU_MANAGER_H
