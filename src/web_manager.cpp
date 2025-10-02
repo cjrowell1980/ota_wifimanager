@@ -1,8 +1,11 @@
 // web_manager.c
 // Simple web server for OTA WiFi Manager (ESP32)
 #include "include/web_manager.h"
+#include "include/config.h"
+#include "include/wifi_manager.h"
 #include <WiFi.h>
 #include <WebServer.h>
+#include <SD.h>
 
 static WebServer server(80);
 

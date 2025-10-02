@@ -4,6 +4,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "defaults.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #define DEFAULT_WIFI_SSID "OTA_WiFiManager"
 #define DEFAULT_WIFI_PASSWORD "password1234"
@@ -18,5 +24,11 @@ extern int image_cycle_interval;
 void config_load();
 void config_save();
 void config_reset();
+void config_mark_changed();
+void config_update();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CONFIG_H

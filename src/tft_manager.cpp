@@ -1,14 +1,14 @@
 // tft_manager.c
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <TFT_eSPI.h>
 #include <TJpg_Decoder.h>
 #include <SD.h>
 #include <stdlib.h>
 
-
-static TFT_eSPI tft = TFT_eSPI();
+extern TFT_eSPI tft;
 
 void tft_manager_init(void) {
     printf("TFT Manager Initialized\n");
@@ -54,9 +54,9 @@ void tft_display_random_image_from_sd(void) {
     if (count == 0) return;
     int idx = rand() % count;
     tft.fillScreen(TFT_BLACK);
-    TJpg_Decoder.setJpgScale(1);
-    TJpg_Decoder.setCallback(tft_output);
-    if (!TJpg_Decoder.drawSdJpg(0, 0, images[idx])) {
+    TJpg_Decoder::setJpgScale(1);
+    TJpg_Decoder::setCallback(tft_output);
+    if (!TJpg_Decoder::drawSdJpg(0, 0, images[idx])) {
         tft.setTextColor(TFT_WHITE, TFT_BLACK);
         tft.setTextSize(2);
         tft.setCursor(10, 10);

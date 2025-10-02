@@ -26,6 +26,7 @@ TFT_eSPI tft = TFT_eSPI(); // Uses Bodmer/TFT_eSPI
 XPT2046_Touchscreen ts(CS_PIN, TIRQ_PIN);
 
 #include "include/menu_manager.h"
+#include "include/tft_manager.h"
 
 void setup() {
   Serial.begin(115200);
@@ -39,7 +40,8 @@ void setup() {
   tft.setRotation(1); // Set as needed for your display
   tft.fillScreen(TFT_BLACK);
   menu_manager_init();
-  displayRandomImageFromSD();
+  tft_manager_init();
+  tft_display_random_image_from_sd();
 }
 
 
@@ -48,41 +50,6 @@ void loop() {
   handleTouchEvent();
   menu_manager_loop();
   // Add other logic as needed
-}
-
-// TJpg_Decoder callback to push pixels to TFT
-static bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
-  tft.pushImage(x, y, w, h, bitmap);
-  return true;
-}
-
-void displayRandomImageFromSD() {
-  // List JPG image files on SD, pick one at random, and display on TFT
-  File root = SD.open("/");
-  if (!root) return;
-  std::vector<String> images;
-  File file = root.openNextFile();
-  while (file) {
-    String name = file.name();
-    name.toLowerCase();
-    if (!file.isDirectory() && (name.endsWith(".jpg") || name.endsWith(".jpeg"))) {
-      images.push_back(file.name());
-    }
-    file = root.openNextFile();
-  }
-  if (images.empty()) return;
-  int idx = random(images.size());
-  String imgName = images[idx];
-  tft.fillScreen(TFT_BLACK);
-  TJpgDec.setJpgScale(1); // No scaling
-  TJpgDec.setCallback(tft_output);
-  if (!TJpgDec.drawSdJpg(0, 0, imgName.c_str())) {
-    tft.setTextColor(TFT_WHITE, TFT_BLACK);
-    tft.setTextSize(2);
-    tft.setCursor(10, 10);
-    tft.print("JPG error: ");
-    tft.println(imgName);
-  }
 }
 
 void handleTouchEvent() {

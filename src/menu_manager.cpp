@@ -3,13 +3,11 @@
  * This is a stub for menu logic. Integrate with TFT and touchscreen libraries.
  */
 #include "include/menu_manager.h"
+#include "include/tft_manager.h"
+#include "include/diag_manager.h"
+#include "include/config.h"
 #include <stdio.h>
 #include <TFT_eSPI.h>
-#include "include/diag_manager.h"
-
-#include "include/config.h"
-
-extern TFT_eSPI tft;
 
 typedef enum {
     STATUS_PAGE_WIFI = 0,

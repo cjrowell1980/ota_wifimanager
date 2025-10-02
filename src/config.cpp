@@ -4,6 +4,7 @@
 #include "include/config.h"
 #include <EEPROM.h>
 #include <Arduino.h>
+#include <string.h>
 
 #define EEPROM_SIZE 128
 
