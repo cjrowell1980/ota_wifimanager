@@ -37,6 +37,7 @@ const unsigned long imageInterval = 5000; // 5 seconds between images
 // WiFi status tracking
 bool wifiConnected = false;
 bool otaInitialized = false;
+bool touchEnabled = false;  // Track if touchscreen is working
 unsigned long lastWiFiCheck = 0;
 const unsigned long wifiCheckInterval = 10000; // Check WiFi every 10 seconds
 
@@ -104,6 +105,7 @@ void setup() {
   Serial.println("Loading configuration...");
   config_load();
   Serial.println("Configuration loaded");
+  yield();
   
   // Initialize hardware step by step with debugging
   Serial.println("Initializing SD card...");
@@ -113,26 +115,47 @@ void setup() {
   } else {
     Serial.println("SD card initialized successfully");
   }
+  yield();
   
   Serial.println("Initializing TFT display...");
   tft.begin();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
   Serial.println("TFT display initialized");
+  yield();
   
   Serial.println("Initializing touchscreen...");
-  ts.begin();
-  ts.setRotation(1);
-  Serial.println("Touchscreen initialized");
+  // Make touchscreen initialization optional to prevent crashes
+  
+  // Check if touchscreen pins are properly defined
+  if (CS_PIN >= 0 && TIRQ_PIN >= 0) {
+    Serial.print("Attempting touchscreen init with CS_PIN=");
+    Serial.print(CS_PIN);
+    Serial.print(" TIRQ_PIN=");
+    Serial.println(TIRQ_PIN);
+    
+    ts.begin();
+    ts.setRotation(1);
+    touchEnabled = true;
+    Serial.println("Touchscreen initialized successfully");
+  } else {
+    Serial.println("Invalid touchscreen pins - skipping touchscreen");
+  }
+  
+  // Add delay and yield to prevent watchdog reset
+  delay(100);
+  yield();
   
   // Initialize managers
   Serial.println("Initializing menu manager...");
   menu_manager_init();
   Serial.println("Menu manager initialized");
+  yield();
   
   Serial.println("Initializing TFT manager...");
   tft_manager_init();
   Serial.println("TFT manager initialized");
+  yield();
   
   // Show startup message
   Serial.println("Displaying startup message...");
@@ -144,6 +167,7 @@ void setup() {
   tft.print("Starting...");
   Serial.println("Startup message displayed");
   delay(3000);
+  yield();
   
   // Try to connect to WiFi non-blocking
   Serial.println("Initializing WiFi...");
@@ -159,10 +183,15 @@ void setup() {
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextSize(1);
   tft.setCursor(10, 220);
-  tft.print("Touch screen for menu");
+  if (touchEnabled) {
+    tft.print("Touch screen for menu");
+  } else {
+    tft.print("Touch disabled - check pins");
+  }
   
   lastImageChange = millis();
   Serial.println("Setup complete!");
+  yield();
 }
 
 
@@ -222,6 +251,11 @@ void checkWiFiStatus() {
 }
 
 void handleTouchEvent() {
+  // Only handle touch events if touchscreen is enabled and working
+  if (!touchEnabled) {
+    return;
+  }
+  
   // Handle touchscreen events using XPT2046_Touchscreen
   if (ts.touched()) {
     TS_Point p = ts.getPoint();
@@ -230,6 +264,11 @@ void handleTouchEvent() {
     int x = p.x;
     int y = p.y;
     // TODO: Calibrate and map x/y if needed
+    
+    Serial.print("Touch detected at: ");
+    Serial.print(x);
+    Serial.print(", ");
+    Serial.println(y);
     
     // Pass touch event to menu manager for navigation
     menu_manager_handle_touch(x, y);
