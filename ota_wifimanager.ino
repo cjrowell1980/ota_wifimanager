@@ -28,6 +28,10 @@ XPT2046_Touchscreen ts(CS_PIN, TIRQ_PIN);
 #include "include/menu_manager.h"
 #include "include/tft_manager.h"
 
+// Timing for image cycling in normal mode
+unsigned long lastImageChange = 0;
+const unsigned long imageInterval = 5000; // 5 seconds between images
+
 void setup() {
   Serial.begin(115200);
   WiFiManager wifiManager;
@@ -42,6 +46,7 @@ void setup() {
   menu_manager_init();
   tft_manager_init();
   tft_display_random_image_from_sd();
+  lastImageChange = millis(); // Initialize timing for image cycling
 }
 
 
@@ -49,7 +54,15 @@ void loop() {
   ArduinoOTA.handle(); // Uses jandrassy/ArduinoOTA
   handleTouchEvent();
   menu_manager_loop();
-  // Add other logic as needed
+  
+  // Handle automatic image cycling in normal mode
+  if (!menu_manager_is_in_menu_mode()) {
+    unsigned long currentTime = millis();
+    if (currentTime - lastImageChange >= imageInterval) {
+      tft_display_random_image_from_sd();
+      lastImageChange = currentTime;
+    }
+  }
 }
 
 void handleTouchEvent() {

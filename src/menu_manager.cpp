@@ -21,32 +21,66 @@ typedef enum {
 } StatusPage;
 
 static StatusPage currentStatusPage = STATUS_PAGE_WIFI;
+static bool inMenuMode = false;
 
 void menu_manager_init(void) {
     printf("Menu Manager Initialized\n");
+    inMenuMode = false;  // Start in normal mode
     // Initialize menu structure, load settings, etc.
+}
+
+void menu_manager_enter_menu_mode(void) {
+    inMenuMode = true;
+    printf("Entering menu mode\n");
+    menu_manager_show_status_page();
+}
+
+void menu_manager_exit_menu_mode(void) {
+    inMenuMode = false;
+    printf("Exiting menu mode\n");
+    // Return to displaying images
+    tft_display_random_image_from_sd();
+}
+
+bool menu_manager_is_in_menu_mode(void) {
+    return inMenuMode;
 }
 
 // Simple touch region detection for Back/Next navigation
 void menu_manager_handle_touch(int x, int y) {
-    // Back button: left half (0-160, 200-240)
+    if (!inMenuMode) {
+        // In normal mode - any touch enters menu mode
+        menu_manager_enter_menu_mode();
+        return;
+    }
+    
+    // In menu mode - handle navigation
+    // Back button: left third (0-107, 200-240)
+    // Next button: middle third (107-213, 200-240)  
+    // Exit button: right third (213-320, 200-240)
     if (y >= 200 && y <= 240) {
-        if (x >= 0 && x < 160) {
+        if (x >= 0 && x < 107) {
             // Back
             currentStatusPage = (StatusPage)((currentStatusPage - 1 + STATUS_PAGE_COUNT) % STATUS_PAGE_COUNT);
             menu_manager_show_status_page();
-        } else if (x >= 160 && x < 320) {
+        } else if (x >= 107 && x < 213) {
             // Next
             currentStatusPage = (StatusPage)((currentStatusPage + 1) % STATUS_PAGE_COUNT);
             menu_manager_show_status_page();
+        } else if (x >= 213 && x < 320) {
+            // Exit
+            menu_manager_exit_menu_mode();
         }
     }
 }
 
 void menu_manager_loop(void) {
-    // Always show the current status page
-    menu_manager_show_status_page();
-    // Touch handling should call menu_manager_handle_touch(x, y) from main sketch
+    // Only show status pages when in menu mode
+    if (inMenuMode) {
+        // Menu is already displayed when entering menu mode
+        // Touch handling will manage navigation
+    }
+    // In normal mode, do nothing - images are handled by main loop
 }
 
 void menu_manager_system_reset(void) {
@@ -56,17 +90,24 @@ void menu_manager_system_reset(void) {
 }
 
 void menu_manager_draw_back_next_buttons() {
-    // Back button (left half)
-    tft.fillRect(0, 200, 160, 40, TFT_DARKGREY);
+    // Back button (left third)
+    tft.fillRect(0, 200, 107, 40, TFT_DARKGREY);
     tft.setTextColor(TFT_WHITE, TFT_DARKGREY);
-    tft.setTextSize(2);
-    tft.setCursor(60, 215);
+    tft.setTextSize(1);
+    tft.setCursor(35, 215);
     tft.print("Back");
-    // Next button (right half)
-    tft.fillRect(160, 200, 160, 40, TFT_DARKGREY);
+    
+    // Next button (middle third)
+    tft.fillRect(107, 200, 106, 40, TFT_DARKGREY);
     tft.setTextColor(TFT_WHITE, TFT_DARKGREY);
-    tft.setCursor(220, 215);
+    tft.setCursor(142, 215);
     tft.print("Next");
+    
+    // Exit button (right third)
+    tft.fillRect(213, 200, 107, 40, TFT_RED);
+    tft.setTextColor(TFT_WHITE, TFT_RED);
+    tft.setCursor(248, 215);
+    tft.print("Exit");
 }
 
 void menu_manager_show_status_ap() {
