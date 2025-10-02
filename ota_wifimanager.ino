@@ -74,9 +74,9 @@ void displayRandomImageFromSD() {
   int idx = random(images.size());
   String imgName = images[idx];
   tft.fillScreen(TFT_BLACK);
-  TJpg_Decoder.setJpgScale(1); // No scaling
-  TJpg_Decoder.setCallback(tft_output);
-  if (!TJpg_Decoder.drawSdJpg(0, 0, imgName.c_str())) {
+  TJpgDec.setJpgScale(1); // No scaling
+  TJpgDec.setCallback(tft_output);
+  if (!TJpgDec.drawSdJpg(0, 0, imgName.c_str())) {
     tft.setTextColor(TFT_WHITE, TFT_BLACK);
     tft.setTextSize(2);
     tft.setCursor(10, 10);
