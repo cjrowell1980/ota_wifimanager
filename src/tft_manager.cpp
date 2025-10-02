@@ -37,13 +37,6 @@ void tft_handle_touch_event(void) {
     // Touch event logic handled in main sketch
 }
 
-
-// TJpg_Decoder callback to push pixels to TFT
-static bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
-    tft.pushImage(x, y, w, h, bitmap);
-    return true;
-}
-
 void tft_display_random_image_from_sd(void) {
     printf("Displaying random image from SD card...\n");
     File root = SD.open("/");
