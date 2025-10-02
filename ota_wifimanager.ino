@@ -32,7 +32,9 @@ XPT2046_Touchscreen ts(CS_PIN, TIRQ_PIN);
 
 // Timing for image cycling in normal mode
 unsigned long lastImageChange = 0;
+unsigned long lastDisplayUpdate = 0;
 const unsigned long imageInterval = 5000; // 5 seconds between images
+const unsigned long displayUpdateInterval = 1000; // Update display every second
 
 // WiFi status tracking
 bool wifiConnected = false;
@@ -125,22 +127,9 @@ void setup() {
   yield();
   
   Serial.println("Initializing touchscreen...");
-  // Make touchscreen initialization optional to prevent crashes
-  
-  // Check if touchscreen pins are properly defined
-  if (CS_PIN >= 0 && TIRQ_PIN >= 0) {
-    Serial.print("Attempting touchscreen init with CS_PIN=");
-    Serial.print(CS_PIN);
-    Serial.print(" TIRQ_PIN=");
-    Serial.println(TIRQ_PIN);
-    
-    ts.begin();
-    ts.setRotation(1);
-    touchEnabled = true;
-    Serial.println("Touchscreen initialized successfully");
-  } else {
-    Serial.println("Invalid touchscreen pins - skipping touchscreen");
-  }
+  // Temporarily disable touchscreen to isolate the crash
+  Serial.println("Touchscreen initialization disabled for debugging");
+  touchEnabled = false;
   
   // Add delay and yield to prevent watchdog reset
   delay(100);
@@ -175,8 +164,33 @@ void setup() {
   Serial.println("WiFi initialization complete");
   
   // Start displaying images regardless of WiFi status
-  Serial.println("Displaying first image...");
-  tft_display_random_image_from_sd();
+  Serial.println("Displaying test pattern instead of images...");
+  
+  // Show a simple test pattern instead of trying to load images
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.setTextSize(3);
+  tft.setCursor(60, 80);
+  tft.print("TFT WORKS!");
+  
+  tft.setTextSize(2);
+  tft.setCursor(20, 120);
+  tft.print("OTA WiFi Manager");
+  
+  tft.setTextSize(1);
+  tft.setCursor(10, 150);
+  tft.print("SD Card: Failed");
+  tft.setCursor(10, 170);
+  tft.print("Touch: Disabled");
+  
+  // Draw some colored rectangles to test display
+  tft.fillRect(10, 190, 50, 20, TFT_RED);
+  tft.fillRect(70, 190, 50, 20, TFT_GREEN);
+  tft.fillRect(130, 190, 50, 20, TFT_BLUE);
+  tft.fillRect(190, 190, 50, 20, TFT_YELLOW);
+  tft.fillRect(250, 190, 50, 20, TFT_MAGENTA);
+  
+  Serial.println("Test pattern displayed");
   
   // If image display failed, show a simple fallback
   delay(1000);
@@ -186,10 +200,11 @@ void setup() {
   if (touchEnabled) {
     tft.print("Touch screen for menu");
   } else {
-    tft.print("Touch disabled - check pins");
+    tft.print("Basic display test - no touch");
   }
   
   lastImageChange = millis();
+  lastDisplayUpdate = millis();
   Serial.println("Setup complete!");
   yield();
 }
@@ -217,11 +232,30 @@ void loop() {
   handleTouchEvent();
   menu_manager_loop();
   
-  // Handle automatic image cycling in normal mode
+  // Handle automatic image cycling in normal mode (disabled for now)
   if (!menu_manager_is_in_menu_mode()) {
+    // Instead of cycling images, update a simple counter on screen
+    if (currentTime - lastDisplayUpdate >= displayUpdateInterval) {
+      static int counter = 0;
+      counter++;
+      
+      // Update counter display to show the device is alive
+      tft.fillRect(250, 10, 60, 20, TFT_BLACK);
+      tft.setTextColor(TFT_CYAN, TFT_BLACK);
+      tft.setTextSize(1);
+      tft.setCursor(250, 10);
+      tft.print("Uptime:");
+      tft.setCursor(250, 20);
+      tft.print(counter);
+      tft.print("s");
+      
+      lastDisplayUpdate = currentTime;
+    }
+    
     if (currentTime - lastImageChange >= imageInterval) {
-      Serial.println("Time to cycle image...");
-      tft_display_random_image_from_sd();
+      Serial.println("Image cycling disabled - SD card not working");
+      // Don't try to display images since SD card failed
+      // tft_display_random_image_from_sd();
       lastImageChange = currentTime;
     }
   }
